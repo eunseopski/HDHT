@@ -160,7 +160,7 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
         gt_boxes = [gt['boxes'].numpy()for gt in targets]
 
         # ignore variables are used in our benchmark and CHuman Benchmark
-        ignore_ar = [gt['ignore'] for gt in targets]
+        # ignore_ar = [gt['ignore'] for gt in targets] ignore을 txt에 안넣었기 때문에..
         # Just to be sure target and prediction have batchsize 2
         assert len(gt_boxes) == len(pred_boxes)
         for j in range(len(gt_boxes)):
@@ -178,7 +178,8 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
                 pred_dict['height'].append(p_b[3] - p_b[1])
                 pred_dict['confidence'].append(p_s)
 
-            for _, (gt_b, ignore_val) in enumerate(zip(gt_boxes[j], ignore_ar[j])):
+            # for _, (gt_b, ignore_val) in enumerate(zip(gt_boxes[j], ignore_ar[j])):
+            for _, (gt_b, ignore_val) in enumerate(zip(gt_boxes[j])):
                 gt_dict['image'].append(im_name)
                 gt_dict['class_label'].append('head')
                 gt_dict['id'].append(0)
@@ -186,7 +187,7 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
                 gt_dict['y_top_left'].append(gt_b[1])
                 gt_dict['width'].append(gt_b[2] - gt_b[0])
                 gt_dict['height'].append(gt_b[3] - gt_b[1])
-                gt_dict['ignore'].append(ignore_val)
+                # gt_dict['ignore'].append(ignore_val)
 
         evaluator_time = time.time() - evaluator_time
         metric_logger.update(model_time=model_time, evaluator_time=evaluator_time)

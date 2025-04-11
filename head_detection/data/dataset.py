@@ -27,9 +27,8 @@ class HeadDataset(data.Dataset):
     """
     Dataset class.
     """
-    def __init__(self, txt_path, base_path, dataset_param, train=True, name='Empty'):
-        self.base_path = base_path
-        self.name = name
+    def __init__(self, txt_path, base_path, dataset_param, train=True):
+        self.base_path = base_path # txt 파일의 경로
         self.bboxes = defaultdict(list)
         self.mean = dataset_param.get('mean', None)
         self.std = dataset_param.get('std', None)
@@ -121,7 +120,7 @@ class HeadDataset(data.Dataset):
         if not isinstance(transf_labels, torch.Tensor):
             transformed_dict['labels'] = torch.tensor(np.array(transf_labels),
                                                       dtype=torch.int64)
-        
+
         return img, transformed_dict
 
 
@@ -206,9 +205,10 @@ class HeadDataset(data.Dataset):
         target, ignore_ar = self.filter_targets(annotations, ignore_ar, img)
         # Preprocess (Data augmentation)
         target_dict = self.create_target_dict(img, target, index, ignore_ar=ignore_ar)
+        target_dict.pop('ignore', None)  # 'ignore' 키 있으면 삭제, 없으면 무시
         transformed_dict = self.transforms(**target_dict)
         transformed_dict["image"] = to_tensor(transformed_dict["image"])
-        # Replace keys compaitible with Torch's FRCNN  
+        # Replace keys compaitible with Torch's FRCNN
         img, target = self.refine_transformation(transformed_dict)
         return img, target
 
