@@ -1,22 +1,22 @@
 #config.yaml, 이게 detection을 훈련하는 yaml 파일로 보인다. 
 
 DATASET:
-    base_path: '<Directory where the files mentioned below are placed>'
-    train: 'SH+CHuman_FT.txt'
-    valid: 'HeadHunter_Test.txt'
+    base_path: '/home/choi/hwang/workspace/HeadHunter/datasets/train'
+    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman.txt'
+    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman.txt'
     benchmark: 'Combined'
     mean_std: [[117, 110, 105], [67.10, 65.45, 66.23]]
     min_size: 800
     max_size: 1400
 
 TRAINING:
-    exp_name: 'COMBINED_R50_PT'
+    exp_name: 'R50_PT_eunseop'
     backbone : 'resnet50'
     only_backbone : False
-    pretrained_model: '<Path to .pth if resuming the training>'
-    save_dir: '<Directory to save the model?>'
+    pretrained_model: ''
+    save_dir: '/home/choi/hwang/workspace/HeadHunter/output_weights'
     start_epoch: 1
-    eval_every: 5
+    eval_every: 2
     log_dir: './Logs/'
     milestones: [10,25,40]
     max_epoch: 50

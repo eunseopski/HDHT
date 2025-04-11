@@ -13,3 +13,6 @@ Logs/
 *.sh
 *.vscode
 settings.json
+/datasets
+/output
+/output_weights

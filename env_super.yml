@@ -1,4 +1,4 @@
-name: env_super
+name: headhunter
 channels:
   - defaults
 dependencies:
@@ -42,10 +42,11 @@ dependencies:
     - scipy==1.6.3
     - six==1.16.0
     - tifffile==2021.4.8
-    - torch==1.8.1+cu111
-    - torchmeta==1.7.0
-    - torchvision==0.9.1
+    # - torch==1.8.1+cu111
+    # - torchmeta==1.7.0
+    # - torchvision==0.9.1
     - tqdm==4.61.0
     - trimesh==3.9.19
     - typing-extensions==3.10.0.0
     - urllib3==1.26.5
+

@@ -20,10 +20,13 @@ from head_detection.models.head_detect import customRCNN
 from head_detection.utils import get_state_dict, plot_ims, to_torch
 from head_detection.vision.utils import init_distributed_mode
 
-try:
-    from scipy.misc import imread, imsave
-except ImportError:
-    from scipy.misc.pilutil import imread
+# try:
+#     from scipy.misc import imread, imsave
+# except ImportError:
+#     from scipy.misc.pilutil import imread
+
+from imageio import imread
+
 
 parser = argparse.ArgumentParser(description='Testing script')
 parser.add_argument('--test_dataset', help='Dataset .txt file')
@@ -84,7 +87,9 @@ def fetch_images():
         img_ar = []
         target_ar = []
         for idx, im in enumerate(batch):
-            img_ar.extend(to_torch(imread(im)))
+            img_ar.extend(to_torch(imageio.imread(im)))
+            # img_ar.extend(to_torch(imread(im)))
+
             target_ar.append(get_test_dict((args.batch_size*b_ind)+idx+1))
         yield img_ar, target_ar
 

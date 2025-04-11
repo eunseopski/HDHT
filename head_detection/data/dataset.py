@@ -11,13 +11,17 @@ import numpy as np
 import torch
 import torch.utils.data as data
 from albumentations import BboxParams, Compose, HorizontalFlip
-from albumentations.pytorch import ToTensor
+from albumentations.pytorch import ToTensorV2
+# from albumentations.pytorch import ToTensor
 from torchvision.ops.boxes import clip_boxes_to_image
+from torchvision.transforms.functional import to_tensor
 
-try:
-    from scipy.misc import imread
-except ImportError:
-    from scipy.misc.pilutil import imread
+# try:
+#     from scipy.misc import imread
+# except ImportError:
+#     from scipy.misc.pilutil import imread
+import imageio
+
 
 class HeadDataset(data.Dataset):
     """
@@ -39,7 +43,7 @@ class HeadDataset(data.Dataset):
                 if lin.startswith('#'):
                     ind+=1
                     continue
-                lin_list = [float(i) for i in lin.rstrip().split(' ')]
+                lin_list = [float(i) for i in lin.rstrip().split(',')]
                 self.bboxes[ind].append(lin_list)
         self.is_train = train
         self.transforms = self.get_transform()
@@ -89,7 +93,7 @@ class HeadDataset(data.Dataset):
                       A.HorizontalFlip(p=0.5),
                     ])
 
-        transforms.append(ToTensor())
+        # transforms.append(ToTensorV2())
         composed_transform = Compose(transforms,
                                      bbox_params=BboxParams(format='pascal_voc',
                                                             min_area=0,
@@ -148,11 +152,12 @@ class HeadDataset(data.Dataset):
         target_dict = {
                         'image' : img,
                         'bboxes': boxes,
-                        'labels': labels,
-                        'image_id': image_id,
-                        'area': area,
-                        'iscrowd': iscrowd,
-                        'visibilities': visibilities,}
+                        'labels': labels.tolist(),
+                        # 'image_id': image_id,
+                        # 'area': area,
+                        # 'iscrowd': iscrowd,
+                        # 'visibilities': visibilities,
+                        }
 
         # Need ignore label for CHuman evaluation
         if self.is_train:
@@ -176,7 +181,7 @@ class HeadDataset(data.Dataset):
         https://discuss.pytorch.org/t/torchvision-faster-rcnn-empty-training-images/46935
         """
 
-        img = imread(osp.join(self.base_path, self.imgs_path[index]))
+        img = imageio.imread(osp.join(self.base_path, self.imgs_path[index]))
         labels = self.bboxes[index]
         annotations = np.zeros((0, 4))
 
@@ -192,16 +197,18 @@ class HeadDataset(data.Dataset):
             annotation[0, 3] = label[3]  # y2
             # TODO : Write a new dataloader for head hunter
             # Until then, ignore the invisible boxes for training
-            if self.is_train and int(label[4]) < 0:
-                continue
-            ignore_val = True if int(label[4]) != 0 else False
+            # if self.is_train and int(label[4]) < 0:
+            #     continue
+            # ignore_val = True if int(label[4]) != 0 else False
+            ignore_val = False
             ignore_ar.append(ignore_val)
             annotations = np.append(annotations, annotation, axis=0)
         target, ignore_ar = self.filter_targets(annotations, ignore_ar, img)
         # Preprocess (Data augmentation)
         target_dict = self.create_target_dict(img, target, index, ignore_ar=ignore_ar)
         transformed_dict = self.transforms(**target_dict)
-        # Replace keys compaitible with Torch's FRCNN
+        transformed_dict["image"] = to_tensor(transformed_dict["image"])
+        # Replace keys compaitible with Torch's FRCNN  
         img, target = self.refine_transformation(transformed_dict)
         return img, target
 

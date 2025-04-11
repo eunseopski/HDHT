@@ -1,7 +1,7 @@
-#config.yaml
+#config.yaml, traking 훈련 yaml 파일로 보임.
 
 DATASET:
-    base_path: '<Directory where the files mentioned below are placed>'
+    base_path: '/home/choi/hwang/workspace/HeadHunter/CroHD'
     train: 'HeadHunter_Train.txt'
     valid: 'HeadHunter_Test.txt'
     benchmark: 'Combined'
