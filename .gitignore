@@ -17,6 +17,7 @@ settings.json
 /output
 /output_weights
 
+*.pth
 HeadHunter--T/weights/
 HeadHunter--T/./__pycache__
 *.ipynb
