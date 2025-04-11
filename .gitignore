@@ -16,3 +16,14 @@ settings.json
 /datasets
 /output
 /output_weights
+
+HeadHunter--T/weights/
+HeadHunter--T/./__pycache__
+*.ipynb
+*.pyc
+HeadHunter--T/.config/__pycache__
+HeadHunter--T/temp/
+HeadHunter--T/*.csv
+HeadHunter--T/data/*
+HeadHunter--T/run_*.sh
+HeadHunter--T/.vscode/*
