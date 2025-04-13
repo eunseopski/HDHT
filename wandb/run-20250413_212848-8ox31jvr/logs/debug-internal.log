@@ -1,0 +1,15 @@
+{"time":"2025-04-13T21:28:48.290290587+09:00","level":"INFO","msg":"stream: starting","core version":"0.19.9","symlink path":"/home/choi/hwang/workspace/HeadHunter/wandb/run-20250413_212848-8ox31jvr/logs/debug-core.log"}
+{"time":"2025-04-13T21:28:48.679155745+09:00","level":"INFO","msg":"created new stream","id":"8ox31jvr"}
+{"time":"2025-04-13T21:28:48.679208644+09:00","level":"INFO","msg":"stream: started","id":"8ox31jvr"}
+{"time":"2025-04-13T21:28:48.679282894+09:00","level":"INFO","msg":"writer: Do: started","stream_id":"8ox31jvr"}
+{"time":"2025-04-13T21:28:48.679322458+09:00","level":"INFO","msg":"handler: started","stream_id":"8ox31jvr"}
+{"time":"2025-04-13T21:28:48.67933972+09:00","level":"INFO","msg":"sender: started","stream_id":"8ox31jvr"}
+{"time":"2025-04-13T21:28:48.92961991+09:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-04-13T21:28:56.326568347+09:00","level":"INFO","msg":"stream: closing","id":"8ox31jvr"}
+{"time":"2025-04-13T21:28:56.32659136+09:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-04-13T21:28:56.326642205+09:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-04-13T21:28:57.030075623+09:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-04-13T21:28:57.352927937+09:00","level":"INFO","msg":"handler: closed","stream_id":"8ox31jvr"}
+{"time":"2025-04-13T21:28:57.352985205+09:00","level":"INFO","msg":"writer: Close: closed","stream_id":"8ox31jvr"}
+{"time":"2025-04-13T21:28:57.353052982+09:00","level":"INFO","msg":"sender: closed","stream_id":"8ox31jvr"}
+{"time":"2025-04-13T21:28:57.353064804+09:00","level":"INFO","msg":"stream: closed","id":"8ox31jvr"}

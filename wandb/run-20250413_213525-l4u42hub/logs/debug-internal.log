@@ -1,0 +1,7 @@
+{"time":"2025-04-13T21:35:25.614863201+09:00","level":"INFO","msg":"stream: starting","core version":"0.19.9","symlink path":"/home/choi/hwang/workspace/HeadHunter/wandb/run-20250413_213525-l4u42hub/logs/debug-core.log"}
+{"time":"2025-04-13T21:35:25.934151993+09:00","level":"INFO","msg":"created new stream","id":"l4u42hub"}
+{"time":"2025-04-13T21:35:25.934199673+09:00","level":"INFO","msg":"stream: started","id":"l4u42hub"}
+{"time":"2025-04-13T21:35:25.934232644+09:00","level":"INFO","msg":"sender: started","stream_id":"l4u42hub"}
+{"time":"2025-04-13T21:35:25.934257601+09:00","level":"INFO","msg":"handler: started","stream_id":"l4u42hub"}
+{"time":"2025-04-13T21:35:25.934233496+09:00","level":"INFO","msg":"writer: Do: started","stream_id":"l4u42hub"}
+{"time":"2025-04-13T21:35:26.188794784+09:00","level":"INFO","msg":"Starting system monitor"}

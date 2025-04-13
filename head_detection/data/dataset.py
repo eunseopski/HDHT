@@ -39,10 +39,10 @@ class HeadDataset(data.Dataset):
                               for i in lines if i.startswith('#')]
             ind = -1
             for lin in lines:
-                if lin.startswith('#'):
+                if lin.startswith('#'): # #으로 시작한 건 이미지 주소라 건너 뜀
                     ind+=1
                     continue
-                lin_list = [float(i) for i in lin.rstrip().split(',')]
+                lin_list = [float(i) for i in lin.rstrip().split(',')] # bbox 정보 얻기
                 self.bboxes[ind].append(lin_list)
         self.is_train = train
         self.transforms = self.get_transform()

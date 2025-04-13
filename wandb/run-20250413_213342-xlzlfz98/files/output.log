@@ -1,0 +1,16 @@
+Epoch: [1]  [    0/15000]  eta: 3:13:25  lr: 0.010000  loss: 1.5413 (1.5413)  loss_classifier: 0.6985 (0.6985)  loss_box_reg: 0.0505 (0.0505)  loss_objectness: 0.6923 (0.6923)  loss_rpn_box_reg: 0.1001 (0.1001)  time: 0.7737  data: 0.2403  max mem: 2548
+/home/choi/anaconda3/envs/headhunter/lib/python3.8/site-packages/torch/nn/functional.py:3103: UserWarning: The default behavior for interpolate/upsample with float scale_factor changed in 1.6.0 to align with other frameworks/libraries, and now uses scale_factor directly, instead of relying on the computed output size. If you wish to restore the old behavior, please set recompute_scale_factor=True. See the documentation of nn.Upsample for details.
+  warnings.warn("The default behavior for interpolate/upsample with float scale_factor changed "
+iter_count: 100
+Traceback (most recent call last):
+  File "train.py", line 193, in <module>
+    train()
+  File "train.py", line 184, in train
+    train_one_epoch(model, optimizer, train_data_loader,
+  File "/home/choi/hwang/workspace/HeadHunter/head_detection/vision/engine.py", line 65, in train_one_epoch
+    losses.backward()
+  File "/home/choi/anaconda3/envs/headhunter/lib/python3.8/site-packages/torch/tensor.py", line 221, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph)
+  File "/home/choi/anaconda3/envs/headhunter/lib/python3.8/site-packages/torch/autograd/__init__.py", line 130, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt

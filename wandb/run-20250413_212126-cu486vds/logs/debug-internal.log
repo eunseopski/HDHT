@@ -1,0 +1,15 @@
+{"time":"2025-04-13T21:21:26.838953448+09:00","level":"INFO","msg":"stream: starting","core version":"0.19.9","symlink path":"/home/choi/hwang/workspace/HeadHunter/wandb/run-20250413_212126-cu486vds/logs/debug-core.log"}
+{"time":"2025-04-13T21:21:27.199946217+09:00","level":"INFO","msg":"created new stream","id":"cu486vds"}
+{"time":"2025-04-13T21:21:27.199985681+09:00","level":"INFO","msg":"stream: started","id":"cu486vds"}
+{"time":"2025-04-13T21:21:27.200005127+09:00","level":"INFO","msg":"writer: Do: started","stream_id":"cu486vds"}
+{"time":"2025-04-13T21:21:27.200048378+09:00","level":"INFO","msg":"sender: started","stream_id":"cu486vds"}
+{"time":"2025-04-13T21:21:27.200068496+09:00","level":"INFO","msg":"handler: started","stream_id":"cu486vds"}
+{"time":"2025-04-13T21:21:27.445629616+09:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-04-13T21:23:50.514890727+09:00","level":"INFO","msg":"stream: closing","id":"cu486vds"}
+{"time":"2025-04-13T21:23:50.514923358+09:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-04-13T21:23:50.514974224+09:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-04-13T21:23:51.298326803+09:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-04-13T21:23:51.617189837+09:00","level":"INFO","msg":"handler: closed","stream_id":"cu486vds"}
+{"time":"2025-04-13T21:23:51.61720199+09:00","level":"INFO","msg":"writer: Close: closed","stream_id":"cu486vds"}
+{"time":"2025-04-13T21:23:51.617219743+09:00","level":"INFO","msg":"sender: closed","stream_id":"cu486vds"}
+{"time":"2025-04-13T21:23:51.617279585+09:00","level":"INFO","msg":"stream: closed","id":"cu486vds"}

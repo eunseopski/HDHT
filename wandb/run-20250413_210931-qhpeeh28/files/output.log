@@ -1,0 +1,11 @@
+========= Evaluating Model ==========
+Traceback (most recent call last):
+  File "train.py", line 193, in <module>
+    train()
+  File "train.py", line 179, in train
+    result_dict = evaluate(model, val_data_loader, benchmark=benchmark)
+  File "/home/choi/anaconda3/envs/headhunter/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 26, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/choi/hwang/workspace/HeadHunter/head_detection/vision/engine.py", line 183, in evaluate
+    im_name = str(targets[j]['image_id']) + '.jpg'
+KeyError: 'image_id'

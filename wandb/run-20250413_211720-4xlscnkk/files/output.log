@@ -1,0 +1,19 @@
+Epoch: [1]  [    0/15000]  eta: 2:15:19  lr: 0.010000  loss: 1.4991 (1.4991)  loss_classifier: 0.6873 (0.6873)  loss_box_reg: 0.0184 (0.0184)  loss_objectness: 0.6928 (0.6928)  loss_rpn_box_reg: 0.1005 (0.1005)  time: 0.5413  data: 0.1923  max mem: 2548
+/home/choi/anaconda3/envs/headhunter/lib/python3.8/site-packages/torch/nn/functional.py:3103: UserWarning: The default behavior for interpolate/upsample with float scale_factor changed in 1.6.0 to align with other frameworks/libraries, and now uses scale_factor directly, instead of relying on the computed output size. If you wish to restore the old behavior, please set recompute_scale_factor=True. See the documentation of nn.Upsample for details.
+  warnings.warn("The default behavior for interpolate/upsample with float scale_factor changed "
+Traceback (most recent call last):
+  File "train.py", line 193, in <module>
+    train()
+  File "train.py", line 184, in train
+    train_one_epoch(model, optimizer, train_data_loader,
+  File "/home/choi/hwang/workspace/HeadHunter/head_detection/vision/engine.py", line 66, in train_one_epoch
+    optimizer.step()
+  File "/home/choi/anaconda3/envs/headhunter/lib/python3.8/site-packages/torch/optim/lr_scheduler.py", line 67, in wrapper
+    return wrapped(*args, **kwargs)
+  File "/home/choi/anaconda3/envs/headhunter/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 26, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/choi/anaconda3/envs/headhunter/lib/python3.8/site-packages/torch/optim/sgd.py", line 95, in step
+    if p.grad is None:
+  File "/home/choi/anaconda3/envs/headhunter/lib/python3.8/site-packages/torch/tensor.py", line 947, in grad
+    if self.requires_grad and not hasattr(self, "retains_grad") and not self.is_leaf and self._grad is None:
+KeyboardInterrupt

@@ -18,6 +18,7 @@ from head_detection.models.head_detect import customRCNN
 from head_detection.utils import restore_network
 from head_detection.vision.engine import evaluate, train_one_epoch
 from head_detection.vision.utils import collate_fn, init_distributed_mode
+import wandb
 
 cv2.setNumThreads(0)
 cv2.ocl.setUseOpenCL(False)
@@ -164,6 +165,14 @@ def train():
 
     # Start training
     print("======= Training for " + str(max_epoch) + "===========")
+
+    # 실험 이름, 설정값들 전달 (선택사항)
+    wandb.init(project="headhunter-project", name="r50_experiment", config={
+        "batch_size": batch_size,
+        "lr": optimizer.param_groups[0]['lr'],
+        "epochs": max_epoch,
+    })
+
     for epoch in range(start_epoch, int(max_epoch) + 1):
         if epoch % TRAIN_CFG['eval_every'] == 0:
             print("========= Evaluating Model ==========")

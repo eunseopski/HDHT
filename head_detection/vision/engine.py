@@ -15,6 +15,7 @@ import torchvision.models.detection.mask_rcnn
 from head_detection.vision import utils
 from brambox.stat._matchboxes import match_det, match_anno
 from brambox.stat import coordinates, mr_fppi, ap, pr, threshold, fscore, peak, lamr
+import wandb
 
 
 def check_empty_target(targets):
@@ -29,6 +30,9 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
     metric_logger = utils.MetricLogger(delimiter="  ")
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header = 'Epoch: [{}]'.format(epoch)
+
+    iter_count = (epoch-1) * len(data_loader)
+    wandb_log_interval = 100
 
     lr_scheduler = None
     if epoch == 0:
@@ -66,6 +70,17 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
         metric_logger.update(loss=losses_reduced, **loss_dict_reduced)
         metric_logger.update(lr=optimizer.param_groups[0]["lr"])
+
+        avg_loss = metric_logger.meters["loss"].global_avg
+        avg_lr = metric_logger.meters["lr"].global_avg
+
+        iter_count += 1
+        # 💾 N iteration마다 wandb에 기록
+        if wandb.run is not None and iter_count % wandb_log_interval == 0:
+            wandb.log({
+                "train_loss": avg_loss,
+                "lr": avg_lr,
+            }, step=iter_count)
 
     return metric_logger
 
