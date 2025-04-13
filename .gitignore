@@ -17,6 +17,7 @@ settings.json
 /output
 /output_weights
 /wandb
+/images
 
 *.pth
 HeadHunter--T/weights/
