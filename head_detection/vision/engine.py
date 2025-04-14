@@ -16,7 +16,7 @@ from head_detection.vision import utils
 from brambox.stat._matchboxes import match_det, match_anno
 from brambox.stat import coordinates, mr_fppi, ap, pr, threshold, fscore, peak, lamr
 import wandb
-import pdb
+from torch.cuda.amp import autocast, GradScaler
 
 
 def check_empty_target(targets):
@@ -42,12 +42,19 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
         lr_scheduler = utils.warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor)
 
+    # AMP GradScaler 초기화
+    scaler = torch.cuda.amp.GradScaler()
+
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
         if check_empty_target(targets):
             continue
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
-        loss_dict = model(images, targets)
+
+        # loss_dict = model(images, targets)
+        # Autocast를 사용해 mixed precision을 적용
+        with torch.cuda.amp.autocast():
+            loss_dict = model(images, targets)
 
         losses = sum(loss for loss in loss_dict.values())
 
@@ -62,9 +69,14 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
             print(loss_dict_reduced)
             sys.exit(1)
 
-        optimizer.zero_grad()
-        losses.backward()
-        optimizer.step()
+        # optimizer.zero_grad()
+        # losses.backward()
+        # optimizer.step()
+
+        # Scaler를 사용하여 backward 및 optimizer.step
+        scaler.scale(losses).backward()
+        scaler.step(optimizer)
+        scaler.update()
 
         if lr_scheduler is not None:
             lr_scheduler.step()
@@ -75,13 +87,13 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         avg_loss = metric_logger.meters["loss"].global_avg
         avg_lr = metric_logger.meters["lr"].global_avg
 
-        # iter_count += 1
-        # # 💾 N iteration마다 wandb에 기록
-        # if wandb.run is not None and iter_count % wandb_log_interval == 0:
-        #     wandb.log({
-        #         "train_loss": avg_loss,
-        #         "lr": avg_lr,
-        #     }, step=iter_count)
+        iter_count += 1
+        # 💾 N iteration마다 wandb에 기록
+        if wandb.run is not None and iter_count % wandb_log_interval == 0:
+            wandb.log({
+                "train_loss": avg_loss,
+                "lr": avg_lr,
+            }, step=iter_count)
 
     return metric_logger
 
