@@ -183,7 +183,7 @@ def train():
                             result_dict))
         
         train_one_epoch(model, optimizer, train_data_loader,
-                        device, epoch, print_freq=1000)
+                        device, epoch, print_freq=100)
         scheduler.step()
         if torch.distributed.get_rank() == 0:
             print("Saving model")
