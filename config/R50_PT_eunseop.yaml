@@ -18,10 +18,10 @@ TRAINING:
     pretrained_model: ''
     save_dir: '/home/choi/hwang/workspace/HeadHunter/output_weights'
     start_epoch: 1
-    eval_every: 60
+    eval_every: 3
     log_dir: './Logs/'
     milestones: [10,25,40]
-    max_epoch: 50
+    max_epoch: 30
 
 HYPER_PARAM:
     learning_rate: 0.01

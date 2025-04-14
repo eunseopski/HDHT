@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import csv
+import os
 import os.path as osp
 from collections import defaultdict
 from pathlib import Path
@@ -21,8 +22,6 @@ from torchvision.transforms.functional import to_tensor
 # except ImportError:
 #     from scipy.misc.pilutil import imread
 import imageio
-
-
 class HeadDataset(data.Dataset):
     """
     Dataset class.
@@ -152,7 +151,7 @@ class HeadDataset(data.Dataset):
                         'image' : img,
                         'bboxes': boxes,
                         'labels': labels.tolist(),
-                        # 'image_id': image_id,
+                        'image_id': image_id,
                         # 'area': area,
                         # 'iscrowd': iscrowd,
                         # 'visibilities': visibilities,
@@ -179,8 +178,9 @@ class HeadDataset(data.Dataset):
         not fix them. 
         https://discuss.pytorch.org/t/torchvision-faster-rcnn-empty-training-images/46935
         """
+        img_path = osp.join(self.base_path, self.imgs_path[index])
 
-        img = imageio.imread(osp.join(self.base_path, self.imgs_path[index]))
+        img = imageio.imread(img_path)
         labels = self.bboxes[index]
         annotations = np.zeros((0, 4))
 
@@ -196,20 +196,28 @@ class HeadDataset(data.Dataset):
             annotation[0, 3] = label[3]  # y2
             # TODO : Write a new dataloader for head hunter
             # Until then, ignore the invisible boxes for training
-            # if self.is_train and int(label[4]) < 0:
-            #     continue
-            # ignore_val = True if int(label[4]) != 0 else False
-            ignore_val = False
+            if self.is_train and int(label[4]) < 0:
+                continue
+            ignore_val = True if int(label[4]) != 0 else False
+            # ignore_val = False
             ignore_ar.append(ignore_val)
             annotations = np.append(annotations, annotation, axis=0)
         target, ignore_ar = self.filter_targets(annotations, ignore_ar, img)
         # Preprocess (Data augmentation)
         target_dict = self.create_target_dict(img, target, index, ignore_ar=ignore_ar)
-        target_dict.pop('ignore', None)  # 'ignore' 키 있으면 삭제, 없으면 무시
-        transformed_dict = self.transforms(**target_dict)
+        # target_dict.pop('ignore', None)  # 'ignore' 키 있으면 삭제, 없으면 무시
+        transformed_dict = self.transforms(
+            image=target_dict["image"],
+            bboxes=target_dict["bboxes"],
+            labels=target_dict["labels"]
+        )
         transformed_dict["image"] = to_tensor(transformed_dict["image"])
         # Replace keys compaitible with Torch's FRCNN
-        img, target = self.refine_transformation(transformed_dict)
+        img, target = self.refine_transformation(transformed_dict) # 여기서 image_id를 넣어주자.
+        if not self.is_train:
+            target["image_id"] = os.path.basename(img_path)
+        target["ignore"] = torch.tensor([0], dtype=torch.int64)
+        # print(target)
         return img, target
 
 
