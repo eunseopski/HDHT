@@ -19,6 +19,7 @@ from head_detection.utils import restore_network
 from head_detection.vision.engine import evaluate, train_one_epoch
 from head_detection.vision.utils import collate_fn, init_distributed_mode
 import wandb
+import pdb
 
 cv2.setNumThreads(0)
 cv2.ocl.setUseOpenCL(False)

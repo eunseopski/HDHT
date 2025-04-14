@@ -16,6 +16,7 @@ from head_detection.vision import utils
 from brambox.stat._matchboxes import match_det, match_anno
 from brambox.stat import coordinates, mr_fppi, ap, pr, threshold, fscore, peak, lamr
 import wandb
+import pdb
 
 
 def check_empty_target(targets):
@@ -74,13 +75,13 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         avg_loss = metric_logger.meters["loss"].global_avg
         avg_lr = metric_logger.meters["lr"].global_avg
 
-        iter_count += 1
-        # 💾 N iteration마다 wandb에 기록
-        if wandb.run is not None and iter_count % wandb_log_interval == 0:
-            wandb.log({
-                "train_loss": avg_loss,
-                "lr": avg_lr,
-            }, step=iter_count)
+        # iter_count += 1
+        # # 💾 N iteration마다 wandb에 기록
+        # if wandb.run is not None and iter_count % wandb_log_interval == 0:
+        #     wandb.log({
+        #         "train_loss": avg_loss,
+        #         "lr": avg_lr,
+        #     }, step=iter_count)
 
     return metric_logger
 
@@ -145,8 +146,8 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
     """
     Evaluates a model over testing set, using AP, Log MMR, F1-score
     """
-    n_threads = torch.get_num_threads()
-    torch.set_num_threads(1)
+    n_threads = torch.get_num_threads() # Pytorch가 사용하는 스레드 수 확인
+    torch.set_num_threads(1) # 스레드 수를 1로 제한
     device=torch.device('cuda')
     cpu_device = torch.device("cpu")
     model.eval()
@@ -175,14 +176,19 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
         gt_boxes = [gt['boxes'].numpy()for gt in targets]
 
         # ignore variables are used in our benchmark and CHuman Benchmark
-        # ignore_ar = [gt['ignore'] for gt in targets] ignore을 txt에 안넣었기 때문에..
+        ignore_ar = [gt['ignore'] for gt in targets] #ignore을 txt에 안넣었기 때문에..
         # Just to be sure target and prediction have batchsize 2
         assert len(gt_boxes) == len(pred_boxes)
         for j in range(len(gt_boxes)):
-            im_name = str(targets[j]['image_id']) + '.jpg'
+
+            # im_name = str(targets[j]['image_id']) + '.jpg'
+            im_name = str(targets[j]['image_id'])
             # write to results dict for MOT format
-            results[targets[j]['image_id'].item()] = {'boxes': pred_boxes[j],
+            # results[targets[j]['image_id'].item()] = {'boxes': pred_boxes[j],
+            #                                           'scores': pred_scores[j]}
+            results[targets[j]['image_id']] = {'boxes': pred_boxes[j],
                                                       'scores': pred_scores[j]}
+            # print(results[targets[j]['image_id']])
             for _, (p_b, p_s) in enumerate(zip(pred_boxes[j], pred_scores[j])):
                 pred_dict['image'].append(im_name)
                 pred_dict['class_label'].append('head')
@@ -193,8 +199,10 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
                 pred_dict['height'].append(p_b[3] - p_b[1])
                 pred_dict['confidence'].append(p_s)
 
-            # for _, (gt_b, ignore_val) in enumerate(zip(gt_boxes[j], ignore_ar[j])):
-            for _, (gt_b, ignore_val) in enumerate(zip(gt_boxes[j])):
+            for _, (gt_b, ignore_val) in enumerate(zip(gt_boxes[j], ignore_ar[j])):
+            # for gt_b in gt_boxes[j]:
+                # print("gt_boxes[j]:", gt_boxes[j])
+                # print("gt_b:", gt_b)
                 gt_dict['image'].append(im_name)
                 gt_dict['class_label'].append('head')
                 gt_dict['id'].append(0)
@@ -202,7 +210,7 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
                 gt_dict['y_top_left'].append(gt_b[1])
                 gt_dict['width'].append(gt_b[2] - gt_b[0])
                 gt_dict['height'].append(gt_b[3] - gt_b[1])
-                # gt_dict['ignore'].append(ignore_val)
+                gt_dict['ignore'].append(ignore_val)
 
         evaluator_time = time.time() - evaluator_time
         metric_logger.update(model_time=model_time, evaluator_time=evaluator_time)
@@ -215,7 +223,19 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
     gt_df = pd.DataFrame(gt_dict)
     pred_df['image'] = pred_df['image'].astype('category')
     gt_df['image'] = gt_df['image'].astype('category')
-    pr_ = pr(pred_df, gt_df,  ignore=True)
+
+    # 좌표 및 confidence 등 주요 수치형 컬럼들 float64로 강제 변환
+    for col in ['x_top_left', 'y_top_left', 'width', 'height', 'confidence']:
+        if col in pred_df.columns:
+            pred_df[col] = pred_df[col].astype('float64')
+        if col in gt_df.columns:
+            gt_df[col] = gt_df[col].astype('float64')
+
+    gt_df['ignore'] = gt_df['ignore'].astype('uint8') #
+
+    # pr_ = pr(pred_df, gt_df,  ignore=True)
+    pr_ = pr(pred_df, gt_df, ignore=False)
+
     ap_ = ap(pr_)
     mr_fppi_ = mr_fppi(pred_df, gt_df, threshold=0.5,  ignore=True)
     lamr_ = lamr(mr_fppi_)
@@ -230,6 +250,7 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
                     'f1' : threshold_.f1, 'r':pr_['recall'].values[-1],
                     'moda' : moda, 'modp' : modp}
 
+    wandb.log(result_dict)
     metric_logger.synchronize_between_processes()
 
     torch.set_num_threads(n_threads)
