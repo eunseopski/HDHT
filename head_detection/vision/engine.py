@@ -74,6 +74,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         # optimizer.step()
 
         # Scaler를 사용하여 backward 및 optimizer.step
+        optimizer.zero_grad()
         scaler.scale(losses).backward()
         scaler.step(optimizer)
         scaler.update()
@@ -175,7 +176,11 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
 
         torch.cuda.synchronize()
         model_time = time.time()
-        outputs = model(images)
+        # outputs = model(images)
+
+        # mixed precision inference 수행
+        with autocast():
+            outputs = model(images)
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
         model_time = time.time() - model_time
@@ -187,14 +192,13 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
         # GT List
         gt_boxes = [gt['boxes'].numpy()for gt in targets]
 
-        # ignore variables are used in our benchmark and CHuman Benchmark
-        ignore_ar = [gt['ignore'] for gt in targets] #ignore을 txt에 안넣었기 때문에..
         # Just to be sure target and prediction have batchsize 2
         assert len(gt_boxes) == len(pred_boxes)
         for j in range(len(gt_boxes)):
 
             # im_name = str(targets[j]['image_id']) + '.jpg'
             im_name = str(targets[j]['image_id'])
+
             # write to results dict for MOT format
             # results[targets[j]['image_id'].item()] = {'boxes': pred_boxes[j],
             #                                           'scores': pred_scores[j]}
@@ -211,10 +215,7 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
                 pred_dict['height'].append(p_b[3] - p_b[1])
                 pred_dict['confidence'].append(p_s)
 
-            for _, (gt_b, ignore_val) in enumerate(zip(gt_boxes[j], ignore_ar[j])):
-            # for gt_b in gt_boxes[j]:
-                # print("gt_boxes[j]:", gt_boxes[j])
-                # print("gt_b:", gt_b)
+            for gt_b in gt_boxes[j]:
                 gt_dict['image'].append(im_name)
                 gt_dict['class_label'].append('head')
                 gt_dict['id'].append(0)
@@ -222,7 +223,6 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
                 gt_dict['y_top_left'].append(gt_b[1])
                 gt_dict['width'].append(gt_b[2] - gt_b[0])
                 gt_dict['height'].append(gt_b[3] - gt_b[1])
-                gt_dict['ignore'].append(ignore_val)
 
         evaluator_time = time.time() - evaluator_time
         metric_logger.update(model_time=model_time, evaluator_time=evaluator_time)
@@ -243,13 +243,11 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
         if col in gt_df.columns:
             gt_df[col] = gt_df[col].astype('float64')
 
-    gt_df['ignore'] = gt_df['ignore'].astype('uint8') #
-
-    # pr_ = pr(pred_df, gt_df,  ignore=True)
+    gt_df['ignore'] = False
     pr_ = pr(pred_df, gt_df, ignore=False)
 
     ap_ = ap(pr_)
-    mr_fppi_ = mr_fppi(pred_df, gt_df, threshold=0.5,  ignore=True)
+    mr_fppi_ = mr_fppi(pred_df, gt_df, threshold=0.5)
     lamr_ = lamr(mr_fppi_)
     f1_ = fscore(pr_)
     f1_ = f1_.fillna(0)

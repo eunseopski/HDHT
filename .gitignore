@@ -18,6 +18,8 @@ settings.json
 /output_weights
 /wandb
 /images
+/bboxes_images
+
 
 *.pth
 HeadHunter--T/weights/

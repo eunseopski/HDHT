@@ -44,18 +44,17 @@ class HeadDataset(data.Dataset):
                 lin_list = [float(i) for i in lin.rstrip().split(',')] # bbox 정보 얻기
                 self.bboxes[ind].append(lin_list)
         self.is_train = train
-        self.transforms = self.get_transform()
+        self.transforms = self.get_transform() #증강 함수
 
     def __len__(self):
         return len(self.imgs_path)
 
-    def filter_targets(self, boxes, ignore_ar, im):
+    def filter_targets(self, boxes, im):
         """
-        Remove boxes with 0 or negative area
+        Remove boxes with negative area
         """
         filtered_targets = []
-        filtered_ignorear = []
-        for bx, ig_ar in zip(boxes, ignore_ar):
+        for bx in boxes:
             clipped_im = clip_boxes_to_image(torch.tensor(bx), im.shape[:2]).cpu().numpy()
             area_cond = self.get_area(clipped_im) <= 1
             dim_cond = clipped_im[2] - clipped_im[0] <= 0 and clipped_im[3] - clipped_im[1] <= 0
@@ -63,8 +62,7 @@ class HeadDataset(data.Dataset):
             if area_cond or dim_cond:
                 continue
             filtered_targets.append(clipped_im)
-            filtered_ignorear.append(ig_ar)
-        return np.array(filtered_targets), filtered_ignorear
+        return np.array(filtered_targets)
 
 
     def get_area(self, boxes):
@@ -123,7 +121,7 @@ class HeadDataset(data.Dataset):
         return img, transformed_dict
 
 
-    def create_target_dict(self, img, target, index, ignore_ar=None):
+    def create_target_dict(self, img, target, index):
         """
         Create the GT dictionary in similar style to COCO.
         For empty boxes, use [1,2,3,4] as box dimension, but with
@@ -131,8 +129,6 @@ class HeadDataset(data.Dataset):
         """
         n_target = len(target)
         image_id = torch.tensor([index])
-        visibilities = torch.ones((n_target), dtype=torch.float32)
-        iscrowd = torch.zeros((n_target,), dtype=torch.int64)
 
         # When there are no targets, set the BBOxes to 1pixel wide
         # and assign background label
@@ -152,18 +148,9 @@ class HeadDataset(data.Dataset):
                         'bboxes': boxes,
                         'labels': labels.tolist(),
                         'image_id': image_id,
-                        # 'area': area,
-                        # 'iscrowd': iscrowd,
-                        # 'visibilities': visibilities,
                         }
 
-        # Need ignore label for CHuman evaluation
-        if self.is_train:
-            return target_dict
-        else:
-            assert len(ignore_ar)== len(target)
-            target_dict['ignore'] = ignore_ar
-            return target_dict
+        return target_dict
 
 
     def __getitem__(self, index):
@@ -194,17 +181,13 @@ class HeadDataset(data.Dataset):
             annotation[0, 1] = label[1]  # y1
             annotation[0, 2] = label[2]  # x2
             annotation[0, 3] = label[3]  # y2
-            # TODO : Write a new dataloader for head hunter
-            # Until then, ignore the invisible boxes for training
-            if self.is_train and int(label[4]) < 0:
-                continue
-            ignore_val = True if int(label[4]) != 0 else False
-            # ignore_val = False
-            ignore_ar.append(ignore_val)
             annotations = np.append(annotations, annotation, axis=0)
-        target, ignore_ar = self.filter_targets(annotations, ignore_ar, img)
+
+        target = self.filter_targets(annotations, img)
+
         # Preprocess (Data augmentation)
-        target_dict = self.create_target_dict(img, target, index, ignore_ar=ignore_ar)
+        target_dict = self.create_target_dict(img, target, index)
+
         # target_dict.pop('ignore', None)  # 'ignore' 키 있으면 삭제, 없으면 무시
         transformed_dict = self.transforms(
             image=target_dict["image"],
@@ -212,12 +195,12 @@ class HeadDataset(data.Dataset):
             labels=target_dict["labels"]
         )
         transformed_dict["image"] = to_tensor(transformed_dict["image"])
+
         # Replace keys compaitible with Torch's FRCNN
         img, target = self.refine_transformation(transformed_dict) # 여기서 image_id를 넣어주자.
         if not self.is_train:
             target["image_id"] = os.path.basename(img_path)
-        target["ignore"] = torch.tensor([0], dtype=torch.int64)
-        # print(target)
+
         return img, target
 
 

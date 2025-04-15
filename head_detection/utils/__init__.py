@@ -17,6 +17,7 @@ from albumentations.pytorch import ToTensorV2
 from head_detection.vision.utils import collate_fn as coco_collate
 
 
+
 def to_torch(im):
     transf = ToTensorV2()
     torched_im = transf(image=im)['image'].to(torch.device("cuda"))
@@ -53,6 +54,11 @@ def restore_network(net, pt_model, only_backbone=False):
     """
     strict = False if only_backbone else True
     state_dict = torch.load(pt_model)
+
+    print("📦 state_dict 키 목록:")
+    for k in state_dict.keys():
+        print(k)
+
     # create new OrderedDict that does not contain `module.`
     new_state_dict = OrderedDict()
     for k, v in state_dict.items():
