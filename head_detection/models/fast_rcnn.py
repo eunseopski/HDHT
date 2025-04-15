@@ -200,7 +200,7 @@ class GeneralizedRCNNTransform(nn.Module):
         if max_size * scale_factor > self.max_size:
             scale_factor = self.max_size / max_size
         image = torch.nn.functional.interpolate(
-            image[None], scale_factor=scale_factor, mode='bilinear', align_corners=False)[0]
+            image[None], scale_factor=scale_factor, mode='bilinear', align_corners=False, recompute_scale_factor=True)[0] # 구버전 방식 복원 (자동으로 출력 크기 계산)
 
         if target is None:
             return image, target

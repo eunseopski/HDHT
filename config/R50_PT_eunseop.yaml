@@ -2,10 +2,12 @@
 
 DATASET:
     base_path: '/home/choi/hwang/workspace/HeadHunter/datasets/train'
-    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman.txt'
-#    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman_tem.txt'
-    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman.txt'
-#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman_tem.txt'
+#    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman.txt'
+    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman_tem.txt'
+#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman.txt'
+    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman_tem.txt'
+#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_test.txt'
+
     benchmark: 'Combined'
     mean_std: [[117, 110, 105], [67.10, 65.45, 66.23]]
     min_size: 800
@@ -18,7 +20,7 @@ TRAINING:
     pretrained_model: ''
     save_dir: '/home/choi/hwang/workspace/HeadHunter/output_weights'
     start_epoch: 1
-    eval_every: 3
+    eval_every: 2
     log_dir: './Logs/'
     milestones: [10,25,40]
     max_epoch: 30

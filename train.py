@@ -107,7 +107,8 @@ def train():
                         soft_nms=NET_CFG['soft_nms'],
                         upscale_rpn=NET_CFG['upscale_rpn'],
                         median_anchors=NET_CFG['median_anchors'],
-                        **kwargs).cuda()    
+                        **kwargs).cuda()
+    print("========model=======", model)
     model_without_ddp = model
     if args.distributed:
         model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu],
@@ -126,9 +127,11 @@ def train():
     # Restore from checkpoint
     pt_model = TRAIN_CFG['pretrained_model']
     if pt_model:
-        model_without_ddp = restore_network(model_without_ddp, pt_model,
+        # model_without_ddp = restore_network(model_without_ddp, pt_model,
+        #                                     only_backbone=TRAIN_CFG['only_backbone'])
+        model = restore_network(model_without_ddp, pt_model,
                                             only_backbone=TRAIN_CFG['only_backbone'])
-    
+
     # Create training and vaid dataset
     dataset_param = {'mean': dataset_mean, 'std':dataset_std,
                     'shape':(kwargs['min_size'], kwargs['max_size'])}
