@@ -4,9 +4,8 @@ DATASET:
     base_path: '/home/choi/hwang/workspace/HeadHunter/datasets/train'
 #    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman.txt'
     train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman_tem.txt'
-#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman.txt'
-    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman_tem.txt'
-#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_test.txt'
+    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman.txt'
+#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman_tem.txt'
 
     benchmark: 'Combined'
     mean_std: [[117, 110, 105], [67.10, 65.45, 66.23]]
@@ -17,13 +16,13 @@ TRAINING:
     exp_name: 'R50_PT_eunseop'
     backbone : 'resnet50'
     only_backbone : False
-    pretrained_model: ''
+    pretrained_model: '/home/choi/hwang/workspace/HeadHunter/output_weights/R50_PT_eunseop_epoch_7.pth'
     save_dir: '/home/choi/hwang/workspace/HeadHunter/output_weights'
     start_epoch: 1
-    eval_every: 2
+    eval_every: 1
     log_dir: './Logs/'
     milestones: [10,25,40]
-    max_epoch: 30
+    max_epoch: 20
 
 HYPER_PARAM:
     learning_rate: 0.01

@@ -108,7 +108,7 @@ def train():
                         upscale_rpn=NET_CFG['upscale_rpn'],
                         median_anchors=NET_CFG['median_anchors'],
                         **kwargs).cuda()
-    print("========model=======", model)
+
     model_without_ddp = model
     if args.distributed:
         model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu],
@@ -186,7 +186,7 @@ def train():
                             result_dict))
         
         train_one_epoch(model, optimizer, train_data_loader,
-                        device, epoch, print_freq=100)
+                        device, epoch, print_freq=1000)
         scheduler.step()
         if torch.distributed.get_rank() == 0:
             print("Saving model")
