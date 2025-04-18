@@ -132,6 +132,13 @@ def train():
         model = restore_network(model_without_ddp, pt_model,
                                             only_backbone=TRAIN_CFG['only_backbone'])
 
+    def count_parameters(model):
+        return sum(p.numel() for p in model.parameters())
+
+    # 모델의 파라미터 수 출력
+    model_params = count_parameters(model)
+    print(f"모델 파라미터 수: {model_params}")
+
     # Create training and vaid dataset
     dataset_param = {'mean': dataset_mean, 'std':dataset_std,
                     'shape':(kwargs['min_size'], kwargs['max_size'])}

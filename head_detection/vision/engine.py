@@ -36,24 +36,23 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
     wandb_log_interval = 100
 
     lr_scheduler = None
-    if epoch == 0:
+    if epoch == 1:
         warmup_factor = 1. / 1000
         warmup_iters = min(1000, len(data_loader) - 1)
 
         lr_scheduler = utils.warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor)
 
-    # AMP GradScaler 초기화
-    scaler = torch.cuda.amp.GradScaler()
+    scaler = torch.cuda.amp.GradScaler() # AMP GradScaler 초기화
 
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
+        torch.cuda.empty_cache()
         if check_empty_target(targets):
             continue
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
-        # loss_dict = model(images, targets)
-        # Autocast를 사용해 mixed precision을 적용
-        with torch.cuda.amp.autocast():
+        optimizer.zero_grad()
+        with torch.cuda.amp.autocast(): # Auto mixed precision
             loss_dict = model(images, targets)
 
         losses = sum(loss for loss in loss_dict.values())
@@ -69,12 +68,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
             print(loss_dict_reduced)
             sys.exit(1)
 
-        # optimizer.zero_grad()
-        # losses.backward()
-        # optimizer.step()
-
         # Scaler를 사용하여 backward 및 optimizer.step
-        optimizer.zero_grad()
         scaler.scale(losses).backward()
         scaler.step(optimizer)
         scaler.update()
