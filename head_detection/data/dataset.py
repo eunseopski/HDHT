@@ -13,7 +13,6 @@ import torch
 import torch.utils.data as data
 from albumentations import BboxParams, Compose, HorizontalFlip
 from albumentations.pytorch import ToTensorV2
-# from albumentations.pytorch import ToTensor
 from torchvision.ops.boxes import clip_boxes_to_image
 from torchvision.transforms.functional import to_tensor
 
@@ -38,7 +37,7 @@ class HeadDataset(data.Dataset):
                               for i in lines if i.startswith('#')]
             ind = -1
             for lin in lines:
-                if lin.startswith('#'): # #으로 시작한 건 이미지 주소라 건너 뜀
+                if lin.startswith('#'): # #으로 시작한 건 이미지 주소이기 때문에 건너 뜀
                     ind+=1
                     continue
                 lin_list = [float(i) for i in lin.rstrip().split(',')] # bbox 정보 얻기
@@ -197,7 +196,7 @@ class HeadDataset(data.Dataset):
         transformed_dict["image"] = to_tensor(transformed_dict["image"])
 
         # Replace keys compaitible with Torch's FRCNN
-        img, target = self.refine_transformation(transformed_dict) # 여기서 image_id를 넣어주자.
+        img, target = self.refine_transformation(transformed_dict)
         if not self.is_train:
             target["image_id"] = os.path.basename(img_path)
 
