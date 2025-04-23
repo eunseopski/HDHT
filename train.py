@@ -185,20 +185,21 @@ def train():
     })
 
     for epoch in range(start_epoch, int(max_epoch) + 1):
+        train_one_epoch(model, optimizer, train_data_loader,
+                        device, epoch, print_freq=500)
+        scheduler.step()
+
+        if torch.distributed.get_rank() == 0:
+            print("Saving model")
+            torch.save(model.state_dict(), osp.join(save_dir,
+                       TRAIN_CFG['exp_name'] + '_epoch_' + str(epoch) + '.pth'))
+
         if epoch % TRAIN_CFG['eval_every'] == 0:
             print("========= Evaluating Model ==========")
             result_dict = evaluate(model, val_data_loader, benchmark=benchmark)
             if torch.distributed.get_rank() == 0:
                 logging.info('Eval score at {0} epoch is {1}'.format(str(epoch),
                             result_dict))
-        
-        train_one_epoch(model, optimizer, train_data_loader,
-                        device, epoch, print_freq=500)
-        scheduler.step()
-        if torch.distributed.get_rank() == 0:
-            print("Saving model")
-            torch.save(model.state_dict(), osp.join(save_dir,
-                       TRAIN_CFG['exp_name'] + '_epoch_' + str(epoch) + '.pth'))
 
 if __name__ == '__main__':
     train()
