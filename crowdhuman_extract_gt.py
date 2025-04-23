@@ -2,10 +2,10 @@ import json
 import os
 
 # 원본 파일 경로
-input_path = "/home/choi/hwang/workspace/HeadHunter/datasets/crowdhuman/annotation_val.odgt"
+input_path = "/home/choi/hwang/workspace/datasets/crowdhuman/annotation_train.odgt"
 # 출력 파일 경로
-output_path = "/home/choi/hwang/workspace/HeadHunter/datasets/valid/crowdhuman.txt"
-base_path = "/home/choi/hwang/workspace/HeadHunter/datasets/valid"
+output_path = "/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman.txt"
+base_path = "/home/choi/hwang/workspace/HeadHunter/datasets/train"
 
 with open(input_path, 'r') as f:
     lines = f.readlines()

@@ -1,0 +1,7 @@
+INFO:root:Writing logs to this filebase_model_testing.log
+ERROR:brambox.stat._matchboxes:Annotation and detection dataframes do not have the same image categories
+ERROR:brambox.stat._matchboxes:Annotation and detection dataframes do not have the same image categories
+ERROR:brambox.stat._matchboxes:Annotation and detection dataframes do not have the same image categories
+ERROR:brambox.stat._matchboxes:Annotation and detection dataframes do not have the same image categories
+INFO:root:Eval stats are {'AP': 0.866468799107588, 'Log-average miss rate': 0.5556378075888176, 'F1': 0.8854409795293667, 'Recall': 0.8862093537861456, 'Precision': 0.8715007560948622, 'moda(Multiple object detection accuracy)': 0.8181695282053759, 'modp(Multiple object detection precision)': 0.67000783951076}
+INFO:root:Eval stats are {'AP': 0.866468799107588, 'Log-average miss rate': 0.5556378075888176, 'F1': 0.8854409795293667, 'Recall': 0.8862093537861456, 'Precision': 0.8715007560948622, 'moda(Multiple object detection accuracy)': 0.8181695282053759, 'modp(Multiple object detection precision)': 0.67000783951076}
