@@ -1,35 +1,37 @@
-#config.yaml, 이게 detection을 훈련하는 yaml 파일로 보인다. 
-
 DATASET:
     base_path: '/home/choi/hwang/workspace/HeadHunter/datasets/train'
-    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman.txt'
+#    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_train_5543.txt'
 #    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman_tem.txt'
-    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman.txt'
+    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_scut_head.txt'
+
+#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_valid.txt'
+    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_scut_head.txt'
 #    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman_tem.txt'
 
     benchmark: 'Combined'
     mean_std: [[117, 110, 105], [67.10, 65.45, 66.23]]
-    min_size: 800
-    max_size: 1400
+    max_size: 1000
+    min_size: 600
+
 
 TRAINING:
-    exp_name: 'R50_PT_eunseop'
+    exp_name: 'SCUT_up_F_anchor_v2'
     backbone : 'resnet50'
     only_backbone : False
-#    pretrained_model: '/home/choi/hwang/workspace/HeadHunter/output_weights/R50_PT_eunseop_epoch_7.pth'
+#    pretrained_model: '/home/choi/hwang/workspace/HeadHunter/output_weights/SCUT_detection_epoch20.pth'
     pretrained_model: ''
     save_dir: '/home/choi/hwang/workspace/HeadHunter/output_weights'
     start_epoch: 1
-    eval_every: 3
+    eval_every: 1
     log_dir: './Logs/'
-    milestones: [3,5,8]
-    max_epoch: 12
+    milestones: [5,10,15]
+    max_epoch: 20
 
 HYPER_PARAM:
     learning_rate: 0.01
     momentum: 0.9
     weight_decay: 0.0005
-    gamma: 0.1
+    gamma: 0.5
     batch_size: 1
 
 NETWORK:
@@ -38,5 +40,5 @@ NETWORK:
     context: 'cpm'
     custom_sampling: False
     soft_nms: False
-    upscale_rpn: True
+    upscale_rpn: False
     median_anchors: True

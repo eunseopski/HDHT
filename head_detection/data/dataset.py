@@ -80,12 +80,15 @@ class HeadDataset(data.Dataset):
         transforms = []
         if self.is_train:
             transforms.extend([
-                      # A.RandomSizedBBoxSafeCrop(width=self.shape[1],
-                      #                           height=self.shape[0],
+                      # A.RandomSizedBBoxSafeCrop(width=self.shape[0],
+                      #                           height=self.shape[1],
                       #                           erosion_rate=0., p=0.2),
-                      A.RGBShift(),
-                      A.RandomBrightnessContrast(p=0.5),
-                      A.HorizontalFlip(p=0.5),
+
+                    A.LongestMaxSize(max_size=1000, p=1.0),
+                    A.PadIfNeeded(min_height=600, min_width=1000, border_mode=0, value=0, p=1.0),
+                    A.RGBShift(),
+                    A.RandomBrightnessContrast(p=0.5),
+                    A.HorizontalFlip(p=0.5),
                     ])
 
         # transforms.append(ToTensorV2())

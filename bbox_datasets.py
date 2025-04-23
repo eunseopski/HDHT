@@ -62,5 +62,5 @@ def draw_bboxes_from_file(txt_path, show=True, save_dir=None):
 draw_bboxes_from_file(
     '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman_tem.txt',
     show=False,
-    save_dir='/home/choi/hwang/workspace/HeadHunter/bboxes_images'
+    save_dir='/HeadHunter/analyzing_images/bboxes_images'
 )

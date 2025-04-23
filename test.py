@@ -25,7 +25,8 @@ from head_detection.vision.utils import init_distributed_mode
 # except ImportError:
 #     from scipy.misc.pilutil import imread
 
-from imageio import imread
+from imageio import imread, imsave
+from PIL import Image
 
 
 parser = argparse.ArgumentParser(description='Testing script')
@@ -82,13 +83,18 @@ if args.outfile is None:
 def fetch_images():
     all_ext = '*'+args.ext
     all_ims = sorted(glob(osp.join(args.test_dataset, all_ext)))
+    print(len(all_ims))
     batched_ims = [all_ims[k:k+args.batch_size] for k in range(0, len(all_ims), args.batch_size)]
     for b_ind, batch in enumerate(batched_ims):
         img_ar = []
         target_ar = []
         for idx, im in enumerate(batch):
-            img_ar.extend(to_torch(imageio.imread(im)))
             # img_ar.extend(to_torch(imread(im)))
+
+            img = Image.open(im)  # PIL.Image 객체로 이미지 열기
+            img = np.array(img)  # numpy 배열로 변환
+            img = img.astype(np.float32)  # 데이터 타입을 float32로 변환
+            img_ar.extend(to_torch(img / 255.0))  # 0-1 범위로 정규화
 
             target_ar.append(get_test_dict((args.batch_size*b_ind)+idx+1))
         yield img_ar, target_ar
@@ -164,6 +170,17 @@ def test():
     results = {}
     for img_ind, (images, targets) in enumerate(tqdm(fetch_images())):
         np_images = [(ims.cpu().numpy()*255.).astype(np.uint8) for ims in images]
+
+        # # 시각화
+        # import matplotlib.pyplot as plt
+        #
+        # # 시각화
+        # for i, np_img in enumerate(np_images):
+        #     plt.figure(figsize=(10, 10))
+        #     plt.imshow(np_img.transpose(1, 2, 0))  # (C, H, W) -> (H, W, C)로 변환
+        #     plt.axis('off')  # 축 없애기
+        #     plt.show()
+
         torch.cuda.synchronize()
         model_time = time.time()
         outputs = model(images)

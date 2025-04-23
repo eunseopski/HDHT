@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-
 import argparse
 import logging
 import os
@@ -32,7 +31,7 @@ parser.add_argument('--cfg_file', required=True,
 # Torch DataParallel args
 parser.add_argument('--world_size', default=1,
                     type=int, help='number of distributed processes')
-parser.add_argument('--num_workers', default=4, type=int,
+parser.add_argument('--num_workers', default=12, type=int,
                     help='Number of workers used in dataloading')
 args = parser.parse_args()
 print(args)
@@ -158,7 +157,8 @@ def train():
     train_data_loader = torch.utils.data.DataLoader(train_dataset,
                                                     batch_sampler=train_batch_sampler,
                                                     num_workers=args.num_workers,
-                                                    collate_fn=collate_fn)
+                                                    collate_fn=collate_fn,
+                                                    )
 
     val_sampler = torch.utils.data.distributed.DistributedSampler(val_dataset)
     val_batch_sampler = torch.utils.data.BatchSampler(val_sampler,
@@ -178,7 +178,7 @@ def train():
     print("======= Training for " + str(max_epoch) + "===========")
 
     # 실험 이름, 설정값들 전달 (선택사항)
-    wandb.init(project="headhunter-project", name="r50_experiment", config={
+    wandb.init(project="headhunter-project", name=TRAIN_CFG['exp_name'], config={
         "batch_size": batch_size,
         "lr": optimizer.param_groups[0]['lr'],
         "epochs": max_epoch,
@@ -193,7 +193,7 @@ def train():
                             result_dict))
         
         train_one_epoch(model, optimizer, train_data_loader,
-                        device, epoch, print_freq=1000)
+                        device, epoch, print_freq=500)
         scheduler.step()
         if torch.distributed.get_rank() == 0:
             print("Saving model")

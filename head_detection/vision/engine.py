@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import time
+
+
 import math
 import sys
 import time
@@ -44,10 +47,13 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
     scaler = torch.cuda.amp.GradScaler() # AMP GradScaler 초기화
 
+
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
+
         torch.cuda.empty_cache()
         if check_empty_target(targets):
             continue
+
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
@@ -72,7 +78,6 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         scaler.scale(losses).backward()
         scaler.step(optimizer)
         scaler.update()
-
         if lr_scheduler is not None:
             lr_scheduler.step()
 
@@ -263,11 +268,19 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
     moda = get_moda(pred_df, gt_df, threshold=0.2, ignore=True)
     modp = get_modp(pred_df, gt_df, threshold=0.2, ignore=True)
 
-    result_dict = {'AP' : ap_, 'MMR' : lamr_,
-                    'f1' : threshold_.f1, 'r':pr_['recall'].values[-1],
-                    'moda' : moda, 'modp' : modp}
+    result_dict = {
+        'AP' : ap_,
+        'Log-average miss rate' : lamr_,
+        'F1' : threshold_.f1,
+        'Recall':pr_['recall'].values[-1],
+        'Precision': pr_['precision'].values[-1],
+        'moda(Multiple object detection accuracy)' : moda,
+        'modp(Multiple object detection precision)' : modp,
+                    }
 
-    wandb.log(result_dict)
+    if wandb.run is not None:  # wandb.init() 했는지 체크
+        wandb.log(result_dict)
+
     metric_logger.synchronize_between_processes()
 
     torch.set_num_threads(n_threads)

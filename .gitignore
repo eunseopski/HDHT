@@ -18,7 +18,7 @@ settings.json
 /output_weights
 /wandb
 /images
-/bboxes_images
+/analyzing_images
 
 
 *.pth

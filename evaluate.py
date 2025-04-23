@@ -37,13 +37,13 @@ parser.add_argument('--context', help='Whether to use context model')
 
 
 parser.add_argument('--backbone', default='resnet50', help='Backbone network mobilenet, resnet50, resnet152')
-parser.add_argument('--num_workers', default=0, type=int, help='Number of workers used in dataloading')
+parser.add_argument('--num_workers', default=8, type=int, help='Number of workers used in dataloading')
 parser.add_argument('--world_size', default=1, type=int, help='number of distributed processes')
 parser.add_argument('--n_gpu', default=1, type=int, help='Number of GPUs')
 
 parser.add_argument('--results', type=str, help='Where to save the results as txt')
 parser.add_argument('--benchmark', default='Combined', help='Benchmark for training/validation')
-parser.add_argument('--base_path', default='/temp_dd/igrida-fs1/rsundara/dataset', help='Base Path for dataset')
+parser.add_argument('--base_path', default='/home/choi/hwang/workspace/HeadHunter/datasets/test', help='Base Path for dataset')
 parser.add_argument('--batch_size', default=1, type=int, help='Batch size')
 parser.add_argument('--min_size', default=800, type=int, help='If left None, default image size is used')
 parser.add_argument('--max_size', default=1400, type=int, help='If left None, default image size is used')
@@ -125,7 +125,8 @@ def test():
                                 args.base_path,
                                 dataset_param={},
                                 train=False,
-                                name=args.exp_name)]
+                                # name=args.exp_name
+                                )]
 
     if args.n_gpu > 1:
         init_distributed_mode(args)
@@ -160,7 +161,14 @@ def test():
         logging.info('Eval stats are {0}'.format(result_dict))
         for k,v in result_dict.items():
             eval_stats[k].append(v)
-        eval_verbose[data_loader.dataset.name] = result_dict
+        # eval_verbose[data_loader.dataset.name] = result_dict
+
+        # 안전하게 dataset 이름 가져오기
+        dataset_name = getattr(data_loader, 'dataset', None)
+        if dataset_name is not None and hasattr(dataset_name, 'name'):
+            eval_verbose[dataset_name.name] = result_dict
+        else:
+            eval_verbose[f'dataloader_{len(eval_verbose)}'] = result_dict  # fallback 이름
 
     mean_eval_stat = {k:np.mean(v) for k,v in eval_stats.items()}
     print("Avg stats are ")
