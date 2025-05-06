@@ -23,7 +23,7 @@ from itertools import islice
 
 import yaml
 # config_reproduce.yaml 파일 로드
-with open("config/config_reproduce.yaml", 'r') as f:
+with open("/home/choi/hwang/workspace/HeadHunter/HeadHunter--T/config/tracking_up_F.yaml", 'r') as f:
     full_cfg = yaml.safe_load(f)
 
 det_cfg = full_cfg['DET']['det_cfg']
@@ -44,7 +44,8 @@ import configparser
 # Tracker specific
 
 #from head_detection.data import cfg_res50 #cfg_res152
-from head_detection.data.cfg_res50_ssh import cfg_res50
+# from head_detection.data.cfg_res50_ssh import cfg_res50
+from head_detection.data import cfg_mnet, cfg_res50_4fpn, cfg_res152
 
 from config.det_cfg import det_cfg
 from obj_detect import HeadHunter
@@ -84,7 +85,8 @@ frame_shape = (args.frame_dim[0], args.frame_dim[1], 3)
 frame_pair = create_realpair(args.base_dir)
 print("Total length is " + str(len(frame_pair)))
 #objdetect = HeadHunter(cfg_res152, det_cfg, None, None)
-objdetect = HeadHunter(cfg_res50, det_cfg, None, None)
+# objdetect = HeadHunter(cfg_res50, det_cfg, None, None)
+objdetect = HeadHunter(cfg_res50_4fpn, det_cfg, None, None)
 
 tracker_cfg['im_shape'] = frame_shape
 tracker_cfg['inactive_patience'] = 30

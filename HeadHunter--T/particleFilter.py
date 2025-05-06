@@ -33,6 +33,11 @@ class RoIPF:
         self.particles = scatter_particles(init_state, max_particles=self.n_particles)
         self.created_particles = len(self.particles)
         self.weights = np.array([1.0/self.created_particles]*self.created_particles)
+        # 각 값 출력
+        # print(f"Initial State: {len(init_state)}")
+        # print(f"n_particles: {self.n_particles}")
+        # print(f"Generated Particles: {len(self.particles)}")
+        # print(f"Number of Created Particles: {self.created_particles}")
 
 
     def get_vel(self, new_position):

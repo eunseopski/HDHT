@@ -116,9 +116,11 @@ def train():
 
     # Create Optimizer
     params = [p for p in model.parameters() if p.requires_grad]
-    optimizer = torch.optim.SGD(params, lr=HYP_CFG['learning_rate'],
-                                momentum=HYP_CFG['learning_rate'],
-                                weight_decay=HYP_CFG['weight_decay'])
+    # optimizer = torch.optim.SGD(params, lr=HYP_CFG['learning_rate'],
+    #                             momentum=HYP_CFG['learning_rate'],
+    #                             weight_decay=HYP_CFG['weight_decay'])
+    optimizer = torch.optim.Adam(params, lr=HYP_CFG['learning_rate'],
+                                 weight_decay=HYP_CFG['weight_decay'])
 
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
                                                     milestones=TRAIN_CFG['milestones'],
@@ -186,7 +188,7 @@ def train():
 
     for epoch in range(start_epoch, int(max_epoch) + 1):
         train_one_epoch(model, optimizer, train_data_loader,
-                        device, epoch, print_freq=500)
+                        device, epoch, print_freq=1000)
         scheduler.step()
 
         if torch.distributed.get_rank() == 0:

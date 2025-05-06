@@ -20,6 +20,7 @@ from brambox.stat._matchboxes import match_det, match_anno
 from brambox.stat import coordinates, mr_fppi, ap, pr, threshold, fscore, peak, lamr
 import wandb
 from torch.cuda.amp import autocast, GradScaler
+import time
 
 
 def check_empty_target(targets):
@@ -36,7 +37,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
     header = 'Epoch: [{}]'.format(epoch)
 
     iter_count = (epoch-1) * len(data_loader)
-    wandb_log_interval = 100
+    wandb_log_interval = 400
 
     lr_scheduler = None
     if epoch == 1:
@@ -183,8 +184,11 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
     pred_dict = defaultdict(list)
     gt_dict = defaultdict(list)
     results = {}
+    start_time = time.time()
+    total_frames = 0
     for i, (images, targets) in enumerate(metric_logger.log_every(data_loader, 100, header)):
         images = list(img.to(device) for img in images)
+        total_frames += len(images)
 
         torch.cuda.synchronize()
         model_time = time.time()
@@ -193,6 +197,9 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
         # mixed precision inference 수행
         with autocast():
             outputs = model(images)
+
+        torch.cuda.synchronize()
+        model_time = time.time() - model_time
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
         model_time = time.time() - model_time
@@ -268,6 +275,10 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
     moda = get_moda(pred_df, gt_df, threshold=0.2, ignore=True)
     modp = get_modp(pred_df, gt_df, threshold=0.2, ignore=True)
 
+    # FPS 계산
+    total_time = time.time() - start_time
+    fps = total_frames / total_time
+
     result_dict = {
         'AP' : ap_,
         'Log-average miss rate' : lamr_,
@@ -276,6 +287,7 @@ def evaluate(model, data_loader, out_path=None, benchmark=None):
         'Precision': pr_['precision'].values[-1],
         'moda(Multiple object detection accuracy)' : moda,
         'modp(Multiple object detection precision)' : modp,
+        'FPS': fps,
                     }
 
     if wandb.run is not None:  # wandb.init() 했는지 체크

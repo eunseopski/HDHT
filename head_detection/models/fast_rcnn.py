@@ -337,6 +337,7 @@ class CustomRoIHead(RoIHeads):
         box_features = self.box_roi_pool(features, proposals, image_shapes)
         box_features = self.box_head(box_features)
         class_logits, box_regression = self.box_predictor(box_features)
+        # class_logits, box_regression, hpe_6d_pred = self.box_predictor(box_features)
 
         result, losses = [], {}
         if self.training:
@@ -553,3 +554,5 @@ def permute_and_flatten(layer, N, A, C, H, W):
     layer = layer.permute(0, 3, 4, 1, 2)
     layer = layer.reshape(N, -1, C)
     return layer
+
+
