@@ -2,10 +2,10 @@ import cv2
 import os
 
 # 이미지가 저장된 폴더 경로
-image_folder = '/home/choi/hwang/workspace/HeadHunter/MOT17_results'  # 예: 'C:/images/'
+image_folder = '/home/choi/hwang/workspace/HeadHunter/output/HDHT_base_results/HT21-13'  # 예: 'C:/images/'
 
 # 동영상으로 저장할 파일 경로 및 이름
-output_video = '/home/choi/hwang/workspace/HeadHunter/MOT17_results.avi'
+output_video = '/home/choi/hwang/workspace/HeadHunter/output/HDHT_base_results/HT21-13.avi'
 
 
 # 폴더 내 이미지 파일 리스트 불러오기

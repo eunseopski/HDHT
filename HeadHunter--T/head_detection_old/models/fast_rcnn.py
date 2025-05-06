@@ -22,7 +22,6 @@ from torchvision.ops import boxes as box_ops
 
 from head_detection.data import cfg_res50_4fpn as cfg
 from head_detection.models.nms import soft_nms_pytorch
-from pdb import set_trace
 
 
 class FasterRCNN(GeneralizedRCNN):
@@ -200,7 +199,7 @@ class GeneralizedRCNNTransform(nn.Module):
         if max_size * scale_factor > self.max_size:
             scale_factor = self.max_size / max_size
         image = torch.nn.functional.interpolate(
-            image[None], scale_factor=scale_factor, mode='bilinear', align_corners=False, recompute_scale_factor=True)[0] # 구버전 방식 복원 (자동으로 출력 크기 계산)
+            image[None], scale_factor=scale_factor, mode='bilinear', align_corners=False)[0]
 
         if target is None:
             return image, target
@@ -337,7 +336,6 @@ class CustomRoIHead(RoIHeads):
         box_features = self.box_roi_pool(features, proposals, image_shapes)
         box_features = self.box_head(box_features)
         class_logits, box_regression = self.box_predictor(box_features)
-        # class_logits, box_regression, hpe_6d_pred = self.box_predictor(box_features)
 
         result, losses = [], {}
         if self.training:
@@ -356,14 +354,10 @@ class CustomRoIHead(RoIHeads):
                     )
                 )
 
-        has_mask = self.has_mask()
-        # if self.has_mask:
-        if has_mask:
+        if self.has_mask:
             raise ValueError("Masks not supported")
 
-        has_keypoint = self.has_keypoint()
-        # if self.has_keypoint:
-        if has_keypoint:
+        if self.has_keypoint:
             raise ValueError("Keypoints not supported")
 
         return result, losses
@@ -461,12 +455,7 @@ class CustomRPN(RegionProposalNetwork):
             keep = box_ops.batched_nms(boxes, scores, lvl, self.nms_thresh)
             # keep = soft_nms_pytorch(boxes, scores).type(torch.int64)
             # keep only topk scoring predictions
-
-            a = self.post_nms_top_n()
-
-
-            # keep = keep[:self.post_nms_top_n]
-            keep = keep[:a]
+            keep = keep[:self.post_nms_top_n]
             boxes, scores = boxes[keep], scores[keep]
             final_boxes.append(boxes)
             final_scores.append(scores)

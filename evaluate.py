@@ -23,7 +23,8 @@ from head_detection.vision.utils import collate_fn as coco_collate
 from head_detection.vision.utils import init_distributed_mode
 from tqdm import tqdm
 from collections import defaultdict
-import numpy as np
+import time
+import torch
 
 cv2.setNumThreads(0)
 cv2.ocl.setUseOpenCL(False)
@@ -109,6 +110,9 @@ def test():
                        soft_nms=args.soft_nms, upscale_rpn=args.upscale_rpn,
                        median_anchors=median_anchors,
                        **kwargs).cuda().eval()
+    for name, module in model.named_modules():
+        print(f"{name}: {module}")
+
     model = restore_network(model, args.pretrained_model)
     model_without_ddp = model
     if args.test_dataset == 'all':
@@ -157,7 +161,11 @@ def test():
     
     for data_loader in tqdm(data_loaders):
         result_dict = evaluate(model, data_loader)
-        print(result_dict)
+        # print(result_dict)
+        print("========= Evaluation Results =========")
+        for k, v in result_dict.items():
+            print(f"{k:40s}: {v:.4f}")
+
         logging.info('Eval stats are {0}'.format(result_dict))
         for k,v in result_dict.items():
             eval_stats[k].append(v)
@@ -170,12 +178,12 @@ def test():
         else:
             eval_verbose[f'dataloader_{len(eval_verbose)}'] = result_dict  # fallback 이름
 
-    mean_eval_stat = {k:np.mean(v) for k,v in eval_stats.items()}
-    print("Avg stats are ")
-    print(mean_eval_stat)
-    logging.info('Eval stats are {0}'.format(mean_eval_stat))
-    print("Verbose eval results are ")
-    print(eval_verbose)
+    # mean_eval_stat = {k:np.mean(v) for k,v in eval_stats.items()}
+    # print("Avg stats are ")
+    # print(mean_eval_stat)
+    # logging.info('Eval stats are {0}'.format(mean_eval_stat))
+    # print("Verbose eval results are ")
+    # print(eval_verbose)
 
 if __name__ == '__main__':
     test()

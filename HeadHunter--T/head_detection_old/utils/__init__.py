@@ -8,18 +8,15 @@ import cv2
 import numpy as np
 import torch
 import torch.utils.data as data
-# from scipy.misc import imsave
-import imageio
-
+from scipy.misc import imsave
 from torchvision import transforms
 from tqdm import tqdm
-from albumentations.pytorch import ToTensorV2
+from albumentations.pytorch import ToTensor
 from head_detection.vision.utils import collate_fn as coco_collate
 
 
-
 def to_torch(im):
-    transf = ToTensorV2()
+    transf = ToTensor()
     torched_im = transf(image=im)['image'].to(torch.device("cuda"))
     return torch.unsqueeze(torched_im, 0)
 
@@ -54,7 +51,6 @@ def restore_network(net, pt_model, only_backbone=False):
     """
     strict = False if only_backbone else True
     state_dict = torch.load(pt_model)
-
     # create new OrderedDict that does not contain `module.`
     new_state_dict = OrderedDict()
     for k, v in state_dict.items():
@@ -92,8 +88,8 @@ def visualize(base_path, test_dataset, plot_dir, batch_size=4, ):
         gt_boxes = [gt['boxes'].numpy().astype(np.float64) for gt in targets]
         for np_im, gt_box in zip(np_images, gt_boxes):
             plot_images = plot_ims(np_im, [], gt_box)
-            # imsave(osp.join(plot_dir, str(ind) + '.jpg'), plot_images)
-            imageio.imwrite(osp.join(plot_dir, str(ind) + '.jpg'), plot_images)
+            imsave(osp.join(plot_dir, str(ind) + '.jpg'), plot_images)
+
 
 def plot_ims(img, pred_box, gt_box=None, text=True):
     """

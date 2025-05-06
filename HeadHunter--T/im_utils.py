@@ -180,9 +180,13 @@ def scatter_particles(box, cent_disp=(-3,0,3), max_particles=100):
     unique_disp_list = np.unique(np.array(disp_list), axis=0)
     scattered_particles = box + unique_disp_list
     t_particles = []
+    # for part in scattered_particles: !!
+    #     if np.any((part[2:4] - part[0:2])<=0):
+    #         continue
+    #     t_particles.append(part)
     for part in scattered_particles:
-        if np.any((part[2:4] - part[0:2])<=0):
-            continue
+        # if np.any((part[2:4] - part[0:2])<=0):
+        #     continue
         t_particles.append(part)
 
     if len(t_particles) > max_particles:

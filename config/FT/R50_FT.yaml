@@ -2,31 +2,31 @@
 
 DATASET:
     base_path: '/home/choi/hwang/workspace/HeadHunter/CroHD'
-    train: 'HeadHunter_Train.txt'
-    valid: 'HeadHunter_Test.txt'
+    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_HT21_train.txt'
+    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_HT21_valid.txt'
     benchmark: 'Combined'
     mean_std: [[117, 110, 105], [67.10, 65.45, 66.23]]
     min_size: 800
     max_size: 1333
 
 TRAINING:
-    exp_name: 'FT_R50'
+    exp_name: 'CroHD_up_F'
     backbone : 'resnet50'
     only_backbone : False
-    pretrained_model: '<Path to .pth if resuming the training>'
-    save_dir: '<Directory to save the model?>'
+    pretrained_model: ''
+    save_dir: '/home/choi/hwang/workspace/HeadHunter/output_weights'
     start_epoch: 1
-    eval_every: 5
+    eval_every: 1
     log_dir: './Logs/'
-    milestones: [5, 10, 20, 35]
-    max_epoch: 40
+    milestones: [10, 20]
+    max_epoch: 25
 
 HYPER_PARAM:
-    learning_rate: 0.001
+    learning_rate: 0.0001
     momentum: 0.9
     weight_decay: 0.0005
-    gamma: 0.5
-    batch_size: 1
+    gamma: 0.1
+    batch_size: 4
 
 NETWORK:
     use_deform: False
