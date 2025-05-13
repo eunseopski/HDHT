@@ -57,17 +57,17 @@ datasets/
 │   	└── ...
 ├── test/
 │   ├── 1_scut_head.txt
-│   └── ~.jpg
+│   └── ~.jpg # scut_head
 ├── train/
 │   ├── 1_train.txt
 │   ├── 1_scut_head.txt
 │   ├── 1_crowdhuman.txt
-│   └── ~.jpg # (crowdhuman + scut_head)
+│   └── ~.jpg # crowdhuman + scut_head
 ├── valid/
 │   ├── 1_valid.txt
 │   ├── 1_scut_head.txt
 │   ├── 1_crowdhuman.txt
-│   └── ~.jpg # (crowdhuman + scut_head)
+│   └── ~.jpg # crowdhuman + scut_head
 ```
 
 ## Instructions Detection
