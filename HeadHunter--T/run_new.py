@@ -23,7 +23,7 @@ from itertools import islice
 
 import yaml
 # config_reproduce.yaml 파일 로드
-with open("/home/choi/hwang/workspace/HeadHunter/HeadHunter--T/config/tracking_up_F.yaml", 'r') as f:
+with open("/home/choi/hwang/workspace/HeadHunter/HeadHunter--T/config/config_reproduce.yaml", 'r') as f:
     full_cfg = yaml.safe_load(f)
 
 det_cfg = full_cfg['DET']['det_cfg']

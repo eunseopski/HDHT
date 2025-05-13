@@ -97,11 +97,8 @@ for dset in datasets:
 #     print("dset:", dset)
 #     mot_dir = osp.join(args.base_dir, dset)
     mot_dir = args.base_dir
-    # print("mot_dir:", mot_dir)
     mot_seq = os.listdir(mot_dir)[args.start_ind:]
-    # print("mot_seq:", mot_seq)
     mot_paths = sorted([osp.join(mot_dir, seq) for seq in mot_seq]) # /home/choi/hwang/workspace/HeadHunter/CroHD/HT21/test/HT21-11
-    print("mot_paths:", mot_paths)
     # Create the required saving directories
     if args.save_frames:
         save_paths = [osp.join(args.save_path, seq) for seq in mot_seq]

@@ -3,8 +3,8 @@
 DET:
     backbone: 'resnet50'
     det_cfg:
-        trained_model: './model/FT_R50_epoch_24.pth'
-        pretrain_path: ''
+        trained_model: '/home/choi/hwang/workspace/HeadHunter/HeadHunter--T/model/FT_R50_epoch_24.pth'
+#        pretrain_path: ''
         confidence_threshold: 0.1
         nms_threshold: 0.5
         use_deform: False
@@ -36,7 +36,7 @@ GEN:
     save_tracklets: True
     save_frames: True
     display_frame: False
-    save_path : './'
+#    save_path : './'
 
 CAM:
     id: 0
