@@ -76,7 +76,7 @@ datasets/
 
 ## Instructions Detection
 
-1. 학습시 코드
+1. 학습시 코드 (anchor 설정은 head_detection/data/anchors.py 에서 할 수 있다.)
 	
 	```
 	python -m torch.distributed.launch --nproc_per_node=1 --use_env train.py --cfg_file <yaml파일 경로> --world_size 1 --num_workers 4
