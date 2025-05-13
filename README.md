@@ -16,6 +16,7 @@ Code for the head detector (HeadHunter) proposed in our CVPR 2021 paper `Trackin
 5. Alternatively pip can be used to install required packages using `pip install -r requirements.txt` or update your existing environment with the aforementioned yml file.
 
 저자가 제공한 모델 https://drive.google.com/file/d/1CODnsMrFrOCsE7XL9jBDP42GUz3rbUwH/view?usp=sharing
+
 self-trained 모델 https://drive.google.com/file/d/1gh9u3nQvkYZTuHKRiZmFEC0XcZ1PXJVn/view?usp=sharing
 
 
