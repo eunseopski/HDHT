@@ -95,7 +95,7 @@ datasets/
 	python run_mot.py --base_dir /path/to/CroHD/ --cfg_file <your config file> --dataset <test/train> --save_path <directory where results in MOT format can be saved>
 	``` 
 
-2. Tracking test 코드 (MOTchallenge 형식의 결과 출력)
+2. Tracking test 코드 (MOTchallenge 형식의 결과 출력, config 파일 경로는 run_new.py에서 지정해야한다.)
 	```
 	python run_new.py --base_dir /path/to/frames --save_dir /path/to/save/tracks 
 	```
