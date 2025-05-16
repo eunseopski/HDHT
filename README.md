@@ -50,28 +50,27 @@ A config file is necessary for all training. It's built to ease the number of ar
 ### Note : 
 This codebase borrows a noteable portion from pytorch-vision owing to the fact some of their modules cannot be "imported" as a package. 
 
-## 데이터셋
+## 데이터셋 
+https://drive.google.com/file/d/19Sdx1_-pZ7v-laXWRcOTGT2v5bDfZjws/view?usp=sharing
+
 crowdhuman 데이터셋은 test data가 없음.
 ```
 datasets/
 ├── CroHD/
-│   ├── test/
-│   	└── ...
-│   └── train/
-│   	└── ...
+├── SCUT_HEAD/
+├── crowdhuman/
 ├── test/
-│   ├── 1_scut_head.txt
-│   └── ~.jpg # scut_head
+│   └── scut_head.txt
 ├── train/
-│   ├── 1_train.txt
-│   ├── 1_scut_head.txt
-│   ├── 1_crowdhuman.txt
-│   └── ~.jpg # crowdhuman + scut_head
+│   ├── HT21_train.txt
+│   ├── scut_head.txt
+│   ├── crowdhuman.txt
+│   └── scut+crowdhuman.txt
 ├── valid/
-│   ├── 1_valid.txt
-│   ├── 1_scut_head.txt
-│   ├── 1_crowdhuman.txt
-│   └── ~.jpg # crowdhuman + scut_head
+│   ├── HT21_valid.txt
+│   ├── scut_head.txt
+│   ├── crowdhuman.txt
+│   └── scut+crowdhuman.txt
 ```
 
 ## Instructions Detection
