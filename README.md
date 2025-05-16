@@ -15,9 +15,9 @@ Code for the head detector (HeadHunter) proposed in our CVPR 2021 paper `Trackin
 
 5. Alternatively pip can be used to install required packages using `pip install -r requirements.txt` or update your existing environment with the aforementioned yml file.
 
-저자가 제공한 모델 https://drive.google.com/file/d/1CODnsMrFrOCsE7XL9jBDP42GUz3rbUwH/view?usp=sharing
+[저자가 제공한 모델](https://drive.google.com/file/d/1CODnsMrFrOCsE7XL9jBDP42GUz3rbUwH/view?usp=sharing)
 
-self-trained 모델 https://drive.google.com/file/d/1gh9u3nQvkYZTuHKRiZmFEC0XcZ1PXJVn/view?usp=sharing
+[self-trained 모델](https://drive.google.com/file/d/1gh9u3nQvkYZTuHKRiZmFEC0XcZ1PXJVn/view?usp=sharing)
 
 
 ## Config file
@@ -51,7 +51,13 @@ A config file is necessary for all training. It's built to ease the number of ar
 This codebase borrows a noteable portion from pytorch-vision owing to the fact some of their modules cannot be "imported" as a package. 
 
 ## 데이터셋 
-https://drive.google.com/file/d/19Sdx1_-pZ7v-laXWRcOTGT2v5bDfZjws/view?usp=sharing
+[SCUT-Head dataset](https://github.com/HCIILAB/SCUT-HEAD-Dataset-Release)
+
+[CrowdHuman dataset](https://www.kaggle.com/datasets/swayambhumohanty/crowdhuman-dataset)
+
+[CroHD(HT21) dataset](https://motchallenge.net/data/Head_Tracking_21/)
+
+[Download Annotation](https://drive.google.com/file/d/19Sdx1_-pZ7v-laXWRcOTGT2v5bDfZjws/view?usp=sharing)
 
 crowdhuman 데이터셋은 test data가 없음.
 ```
