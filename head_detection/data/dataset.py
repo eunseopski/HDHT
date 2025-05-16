@@ -168,7 +168,6 @@ class HeadDataset(data.Dataset):
         https://discuss.pytorch.org/t/torchvision-faster-rcnn-empty-training-images/46935
         """
         img_path = osp.join(self.base_path, self.imgs_path[index])
-
         img = imageio.imread(img_path)
         labels = self.bboxes[index]
         annotations = np.zeros((0, 4))

@@ -47,7 +47,7 @@ import configparser
 # from head_detection.data.cfg_res50_ssh import cfg_res50
 from head_detection.data import cfg_mnet, cfg_res50_4fpn, cfg_res152
 
-from config.det_cfg import det_cfg
+# from config.det_cfg import det_cfg
 from obj_detect import HeadHunter
 from flow_tracker import Tracker
 import argparse

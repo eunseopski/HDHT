@@ -1,12 +1,15 @@
 DATASET:
-    base_path: '/home/choi/hwang/workspace/HeadHunter/datasets/train'
+    base_path: '/home/choi/hwang/workspace/HeadHunter/datasets'
 #    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_train_5543.txt'
-#    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman_tem.txt'
-    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_scut_head.txt'
+#    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_crowdhuman_relative.txt'
+#    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_scut_head_relative.txt'
+#    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/1_HT21_train_relative.txt'
+    train: '/home/choi/hwang/workspace/HeadHunter/datasets/train/ajaaja.txt'
 
 #    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_valid.txt'
-    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_scut_head.txt'
-#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman_tem.txt'
+#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_scut_head_relative.txt'
+#    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_crowdhuman_relative.txt'
+    valid: '/home/choi/hwang/workspace/HeadHunter/datasets/valid/1_HT21_valid_relative.txt'
 
     benchmark: 'Combined'
     mean_std: [[117, 110, 105], [67.10, 65.45, 66.23]]
@@ -15,11 +18,11 @@ DATASET:
 
 
 TRAINING:
-    exp_name: 'SCUT_up_F_anchor_v2'
+    exp_name: 'relative_test_SCUT'
     backbone : 'resnet50'
     only_backbone : False
 #    pretrained_model: '/home/choi/hwang/workspace/HeadHunter/output_weights/SCUT_detection_epoch20.pth'
-    pretrained_model: ''
+    pretrained_model: '/home/choi/hwang/workspace/HeadHunter/output_weights/Crowd+SCUT_up_F_anchor_paper_epoch_20.pth'
     save_dir: '/home/choi/hwang/workspace/HeadHunter/output_weights'
     start_epoch: 1
     eval_every: 1
@@ -41,5 +44,5 @@ NETWORK:
     custom_sampling: False
     soft_nms: False
     upscale_rpn: False
-    median_anchors: False
+    median_anchors: True
 

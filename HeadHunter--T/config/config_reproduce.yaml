@@ -3,7 +3,7 @@
 DET:
     backbone: 'resnet50'
     det_cfg:
-        trained_model: '/home/choi/hwang/workspace/HeadHunter/HeadHunter--T/model/FT_R50_epoch_24.pth'
+        trained_model: '/home/choi/hwang/workspace/HeadHunter/output_weights/CroHD_up_F_epoch_25.pth'
 #        pretrain_path: ''
         confidence_threshold: 0.1
         nms_threshold: 0.5
