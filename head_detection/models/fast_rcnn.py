@@ -365,7 +365,6 @@ class CustomRoIHead(RoIHeads):
         # if self.has_keypoint:
         if has_keypoint:
             raise ValueError("Keypoints not supported")
-
         return result, losses
 
 
